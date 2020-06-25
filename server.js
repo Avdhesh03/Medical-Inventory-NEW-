@@ -19,14 +19,32 @@ app.get('/add',(req,res)=>{
 
 app.post('/meds/add',(req,res)=>{
     console.log('post body',req.body);
-
-const client=new Client({
-    user:'postgres',
-    host:'localhost',
-    database:'medical1',
-    password:'03111999',
-    port:'5432',
+    
+const {Pool}=require("pg");
+const pool=new Pool({
+    connectionstring:process.env.DATABASE_URL,
+    ssl:true
 });
+
+// const client=new Client({
+//     user:'postgres',
+//     host:'localhost',
+//     database:'medical1',
+//     password:'03111999',
+//     port:'5432',
+// });
+    .get('/db', async (req, res) => {
+    try {
+      const client = await pool.connect();
+      const result = await client.query('SELECT * FROM test_table');
+      const results = { 'results': (result) ? result.rows : null};
+      res.render('pages/db', results );
+      client.release();
+    } catch (err) {
+      console.error(err);
+      res.send("Error " + err);
+    }
+  });
 
 client.connect()
 .then(()=>{
