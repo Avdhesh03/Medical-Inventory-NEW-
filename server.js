@@ -24,7 +24,7 @@ const {Pool}=require("pg");
 const pool=new Pool({
     connectionstring:process.env.DATABASE_URL,
     ssl:true
-});
+})
 
 // const client=new Client({
 //     user:'postgres',
